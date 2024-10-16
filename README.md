@@ -24,7 +24,7 @@ terraform destroy -var-file=poc.tfvars
 ```
 # Accessing Bastion
 chmod 400 "your-keypair.pem"
-ssh -i "your-keypair.pem" ubuntu@ec2-54-166-172-12.compute-1.amazonaws.com
+ssh -i "your-keypair.pem" ubuntu@ec2.compute-1.amazonaws.com
 
 apt update -y ; apt install awscli -y
 curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.29.8/2024-09-11/bin/linux/amd64/kubectl
