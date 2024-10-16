@@ -1,26 +1,26 @@
 env                   = "poc"
 aws-region            = "us-east-1"
 vpc-cidr-block        = "10.16.0.0/16"
-vpc-name              = "rj-poc-vpc"
-igw-name              = "rj-poc-igw"
+vpc-name              = "rj-vpc"
+igw-name              = "rj-igw"
 pub-subnet-count      = 3
 pub-cidr-block        = ["10.16.0.0/20", "10.16.16.0/20", "10.16.32.0/20"]
 pub-availability-zone = ["us-east-1a", "us-east-1b", "us-east-1c"]
-pub-sub-name          = "rj-poc-subnet-public"
+pub-sub-name          = "rj-subnet-public"
 pri-subnet-count      = 3
 pri-cidr-block        = ["10.16.128.0/20", "10.16.144.0/20", "10.16.160.0/20"]
 pri-availability-zone = ["us-east-1a", "us-east-1b", "us-east-1c"]
-pri-sub-name          = "rj-poc-subnet-private"
-public-rt-name        = "rj-poc-public-route-table"
-private-rt-name       = "rj-poc-private-route-table"
-eip-name              = "rj-poc-elasticip-ngw"
-ngw-name              = "rj-poc-ngw"
-eks-sg                = "rj-poc-eks-sg"
+pri-sub-name          = "rj-subnet-private"
+public-rt-name        = "rj-public-route-table"
+private-rt-name       = "rj-private-route-table"
+eip-name              = "rj-elasticip-ngw"
+ngw-name              = "rj-ngw"
+eks-sg                = "rj-eks-sg"
 
 # EKS
 is-eks-cluster-enabled     = true
 cluster-version            = "1.29"
-cluster-name               = "rj-poc-eks"
+cluster-name               = "rj-eks"
 endpoint-private-access    = true
 endpoint-public-access     = false
 ondemand_instance_types    = ["t3.medium"]
