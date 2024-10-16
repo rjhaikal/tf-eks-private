@@ -19,7 +19,7 @@ eks-sg                = "rj-poc-eks-sg"
 
 # EKS
 is-eks-cluster-enabled     = true
-cluster-version            = "1.30"
+cluster-version            = "1.29"
 cluster-name               = "rj-poc-eks"
 endpoint-private-access    = true
 endpoint-public-access     = false
