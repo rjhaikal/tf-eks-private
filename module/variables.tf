@@ -45,7 +45,7 @@ variable "addons" {
   }))
 }
 variable "ondemand_instance_types" {}
-variable "spot_instance_types" {}
+# variable "spot_instance_types" {}
 variable "desired_capacity_on_demand" {}
 variable "min_capacity_on_demand" {}
 variable "max_capacity_on_demand" {}
@@ -54,9 +54,9 @@ variable "ondemand_disk_size" {
   type        = number
   default     = 20
 }
-variable "desired_capacity_spot" {}
-variable "min_capacity_spot" {}
-variable "max_capacity_spot" {}
+# variable "desired_capacity_spot" {}
+# variable "min_capacity_spot" {}
+# variable "max_capacity_spot" {}
 
 # Bastion
 variable "bastion-ami" {

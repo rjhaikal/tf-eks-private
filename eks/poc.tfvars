@@ -19,31 +19,31 @@ eks-sg                = "rj-eks-sg"
 
 # EKS
 is-eks-cluster-enabled     = true
-cluster-version            = "1.29"
-cluster-name               = "rj-eks"
+cluster-version            = "1.30"
+cluster-name               = "rj-eks-tes"
 endpoint-private-access    = true
 endpoint-public-access     = false
 ondemand_instance_types    = ["t3.medium"]
 ondemand_disk_size         = 20 # Set the desired disk size in GiB
-spot_instance_types        = ["c5a.large", "c5a.xlarge", "m5a.large", "m5a.xlarge", "c5.large", "m5.large", "t3a.large", "t3a.xlarge", "t3a.medium"]
+# spot_instance_types        = ["c5a.large", "c5a.xlarge", "m5a.large", "m5a.xlarge", "c5.large", "m5.large", "t3a.large", "t3a.xlarge", "t3a.medium"]
 desired_capacity_on_demand = "1"
 min_capacity_on_demand     = "1"
 max_capacity_on_demand     = "5"
-desired_capacity_spot      = "0"
-min_capacity_spot          = "0"
-max_capacity_spot          = "1"
+# desired_capacity_spot      = "0"
+# min_capacity_spot          = "0"
+# max_capacity_spot          = "1"
 addons = [
   {
     name    = "vpc-cni",
-    version = "v1.18.5-eksbuild.1"
+    version = "v1.18.1-eksbuild.3"
   },
   {
     name    = "coredns"
-    version = "v1.11.3-eksbuild.1"
+    version = "v1.11.1-eksbuild.8"
   },
   {
     name    = "kube-proxy"
-    version = "v1.29.7-eksbuild.9"
+    version = "v1.30.0-eksbuild.3"
   },
   {
     name    = "aws-ebs-csi-driver"
@@ -57,6 +57,6 @@ addons = [
 ]
 
 # Bastion
-bastion-ami            = "ami-005fc0f236362e99f" # Replace with your AMI ID
-bastion-instance-type  = "t3.micro"
+bastion-ami            = "ami-06b21ccaeff8cd686" # Replace with your AMI ID
+bastion-instance-type  = "t2.micro"
 bastion-key-name       = "raja-eks"
