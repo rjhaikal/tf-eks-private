@@ -1,9 +1,4 @@
-# Configuring Production-Ready EKS Clusters with Terraform
-
-## Overview
-This project covers:
-- **Infrastructure as Code (IaC)**: Use Terraform to define and manage your EKS cluster.
-- **CI/CD Automation**: Leverage GitHub Actions to automate deployments.
+# Configuring EKS Clusters with Terraform
 
 ## How To Use
 
@@ -69,4 +64,6 @@ aws configure
 aws eks update-kubeconfig --region us-east-1 --name your-eks-cluster
 kubectl config view
 kubectl get nodes
+
+# Optional, If you're experiencing issues such as error: exec plugin: invalid apiVersion "client.authentication.k8s.io/v1alpha1", try to upgrade your kubectl or awscli version
 ```
