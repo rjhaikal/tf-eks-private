@@ -44,8 +44,12 @@ variable "addons" {
     version = string
   }))
 }
+variable "ami_id" {
+  description = "AMI ID for the launch template"
+  type        = string
+}
+variable "template_instance_types" {}
 variable "ondemand_instance_types" {}
-# variable "spot_instance_types" {}
 variable "desired_capacity_on_demand" {}
 variable "min_capacity_on_demand" {}
 variable "max_capacity_on_demand" {}
@@ -54,9 +58,16 @@ variable "ondemand_disk_size" {
   type        = number
   default     = 20
 }
-# variable "desired_capacity_spot" {}
-# variable "min_capacity_spot" {}
-# variable "max_capacity_spot" {}
+variable "ebs_volume_size" {
+  description = "Size of the EBS volume in GiB"
+  type        = number
+  default     = 20
+}
+variable "iam_permissions_boundary" {
+  description = "The ARN of the policy that is used to set the permissions boundary for the role"
+  type        = string
+  default     = null
+}
 
 # Bastion
 variable "bastion-ami" {

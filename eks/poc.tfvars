@@ -1,15 +1,15 @@
 env                   = "poc"
-aws-region            = "us-east-1"
+aws-region            = "ap-southeast-1"
 vpc-cidr-block        = "10.16.0.0/16"
 vpc-name              = "rj-vpc"
 igw-name              = "rj-igw"
 pub-subnet-count      = 3
 pub-cidr-block        = ["10.16.0.0/20", "10.16.16.0/20", "10.16.32.0/20"]
-pub-availability-zone = ["us-east-1a", "us-east-1b", "us-east-1c"]
+pub-availability-zone = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
 pub-sub-name          = "rj-subnet-public"
 pri-subnet-count      = 3
 pri-cidr-block        = ["10.16.128.0/20", "10.16.144.0/20", "10.16.160.0/20"]
-pri-availability-zone = ["us-east-1a", "us-east-1b", "us-east-1c"]
+pri-availability-zone = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
 pri-sub-name          = "rj-subnet-private"
 public-rt-name        = "rj-public-route-table"
 private-rt-name       = "rj-private-route-table"
@@ -20,18 +20,15 @@ eks-sg                = "rj-eks-sg"
 # EKS
 is-eks-cluster-enabled     = true
 cluster-version            = "1.30"
-cluster-name               = "rj-eks-tes"
+cluster-name               = "rj-eks"
 endpoint-private-access    = true
 endpoint-public-access     = false
-ondemand_instance_types    = ["t3.medium"]
-ondemand_disk_size         = 20 # Set the desired disk size in GiB
-# spot_instance_types        = ["c5a.large", "c5a.xlarge", "m5a.large", "m5a.xlarge", "c5.large", "m5.large", "t3a.large", "t3a.xlarge", "t3a.medium"]
+ami_id                     = "ami-077f3a501b243067e"
+template_instance_types    = ["t3.medium"]
+ebs_volume_size            = 20
 desired_capacity_on_demand = "1"
 min_capacity_on_demand     = "1"
 max_capacity_on_demand     = "5"
-# desired_capacity_spot      = "0"
-# min_capacity_spot          = "0"
-# max_capacity_spot          = "1"
 addons = [
   {
     name    = "vpc-cni",
@@ -39,7 +36,7 @@ addons = [
   },
   {
     name    = "coredns"
-    version = "v1.11.1-eksbuild.8"
+    version = "v1.11.14-eksbuild.2"
   },
   {
     name    = "kube-proxy"
@@ -57,6 +54,6 @@ addons = [
 ]
 
 # Bastion
-bastion-ami            = "ami-06b21ccaeff8cd686" # Replace with your AMI ID
+bastion-ami            = "ami-0198a868663199764" # Replace with your AMI ID
 bastion-instance-type  = "t2.micro"
 bastion-key-name       = "raja-eks"

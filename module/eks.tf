@@ -40,9 +40,52 @@ resource "aws_eks_addon" "eks-addons" {
 
   depends_on = [
     aws_eks_node_group.ondemand-node
-#    aws_eks_node_group.ondemand-node,
-#    aws_eks_node_group.spot-node
   ]
+}
+
+# Launch Template
+resource "aws_launch_template" "eks_launch_template" {
+  name_prefix   = "${var.cluster-name}-launch-template"
+  image_id      = var.ami_id
+  instance_type = var.template_instance_types[0]
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+    ebs {
+      volume_size           = var.ebs_volume_size
+      volume_type           = "gp3"
+      delete_on_termination = true
+      encrypted             = true
+    }
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  user_data = base64encode(<<-EOF
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="==MYBOUNDARY=="
+--==MYBOUNDARY==
+Content-Type: text/x-shellscript; charset="us-ascii"
+#!/bin/bash
+/etc/eks/bootstrap.sh ${var.cluster-name}
+--==MYBOUNDARY==--\
+  EOF
+  )
+
+  monitoring {
+    enabled = false
+  }
+  
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      "Name"        = "poc-node-group"
+      "Environment" = "poc"
+    }
+  }
 }
 
 # NodeGroups
@@ -56,55 +99,60 @@ resource "aws_eks_node_group" "ondemand-node" {
     max_size     = var.max_capacity_on_demand
   }
 
-  subnet_ids = [aws_subnet.private-subnet[0].id, aws_subnet.private-subnet[1].id, aws_subnet.private-subnet[2].id]
-  instance_types = var.ondemand_instance_types
-  capacity_type  = "ON_DEMAND"
+  launch_template {
+    name    = aws_launch_template.eks_launch_template.name
+    version = aws_launch_template.eks_launch_template.latest_version
+  }
 
-  disk_size = var.ondemand_disk_size
+  subnet_ids = [aws_subnet.private-subnet[0].id, aws_subnet.private-subnet[1].id, aws_subnet.private-subnet[2].id]
+
   labels = {
-    type = "ondemand"
+    project = "EKS-NODE-GROUP-NAME"
   }
-  update_config {
-    max_unavailable = 1
-  }
+
   tags = {
-    "Name" = "${var.cluster-name}-ondemand-nodes"
+    "Name" = "${var.cluster-name}-nodes"
   }
-  depends_on = [aws_eks_cluster.eks]
+  depends_on = [
+    aws_iam_role_policy_attachment.eks-role-ng-AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.eks-role-ng-AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.eks-role-ng-AmazonEC2ContainerRegistryReadOnly,
+  ]
 }
 
-#  resource "aws_eks_node_group" "spot-node" {
-#   cluster_name    = aws_eks_cluster.eks[0].name
-#   node_group_name = "${var.cluster-name}-spot-nodes"
-# 
-#   node_role_arn = aws_iam_role.eks-nodegroup-role[0].arn
-# 
-#   scaling_config {
-#     desired_size = var.desired_capacity_spot
-#     min_size     = var.min_capacity_spot
-#     max_size     = var.max_capacity_spot
-#   }
-# 
-# 
-#   subnet_ids = [aws_subnet.private-subnet[0].id, aws_subnet.private-subnet[1].id, aws_subnet.private-subnet[2].id]
-# 
-#   instance_types = var.spot_instance_types
-#   capacity_type  = "SPOT"
-# 
-#   update_config {
-#     max_unavailable = 1
-#   }
-#   tags = {
-#     "Name" = "${var.cluster-name}-spot-nodes"
-#   }
-#   labels = {
-#     type      = "spot"
-#     lifecycle = "spot"
-#   }
-#   disk_size = 50
-# 
-#   depends_on = [aws_eks_cluster.eks]
-# }
+# IAM NodeGroup
+resource "aws_iam_role" "eks-role-ng" {
+  name = "${var.cluster-name}-node-group"
+  permissions_boundary = var.iam_permissions_boundary
+  tags = {
+    "Name" = "${var.cluster-name}-nodes"
+  }
+  assume_role_policy = jsonencode({
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "ec2.amazonaws.com"
+      }
+    }]
+    Version = "2012-10-17"
+  })
+}
+ 
+resource "aws_iam_role_policy_attachment" "eks-role-ng-AmazonEKSWorkerNodePolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  role       = aws_iam_role.eks-role-ng.name
+}
+ 
+resource "aws_iam_role_policy_attachment" "eks-role-ng-AmazonEKS_CNI_Policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  role       = aws_iam_role.eks-role-ng.name
+}
+ 
+resource "aws_iam_role_policy_attachment" "eks-role-ng-AmazonEC2ContainerRegistryReadOnly" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  role       = aws_iam_role.eks-role-ng.name
+}
 
 # Bastion
 resource "aws_instance" "bastion" {

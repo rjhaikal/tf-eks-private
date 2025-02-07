@@ -29,6 +29,9 @@ This project covers:
 
 4. Ensure to create keypair manually on AWS first
 5. Edit `eks/poc.tfvars` According to your environment
+   - for eks ami_id, i retrieve from the following link: https://cloud-images.ubuntu.com/docs/aws/eks/
+   - for bastion ami, you can use whatever you like
+
 6. Apply Terraform
 
 ```
@@ -69,4 +72,6 @@ aws configure
 aws eks update-kubeconfig --region us-east-1 --name your-eks-cluster
 kubectl config view
 kubectl get nodes
+
+# Optional, If you're experiencing issues such as error: exec plugin: invalid apiVersion "client.authentication.k8s.io/v1alpha1", try to upgrade your kubectl or awscli version
 ```

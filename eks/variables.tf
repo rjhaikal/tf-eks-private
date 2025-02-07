@@ -35,6 +35,9 @@ variable "endpoint-public-access" {}
 variable "ondemand_instance_types" {
   default = ["t3.medium"]
 }
+variable "template_instance_types" {
+  default = ["t3.medium"]
+}
 
 variable "ondemand_disk_size" {
   description = "Disk size for on-demand EKS node group instances"
@@ -42,18 +45,25 @@ variable "ondemand_disk_size" {
   default     = 20
 }
 
-# variable "spot_instance_types" {}
+variable "ebs_volume_size" {
+  description = "Size of the EBS volume in GiB"
+  type        = number
+  default     = 20
+}
+
 variable "desired_capacity_on_demand" {}
 variable "min_capacity_on_demand" {}
 variable "max_capacity_on_demand" {}
-# variable "desired_capacity_spot" {}
-# variable "min_capacity_spot" {}
-# variable "max_capacity_spot" {}
 variable "addons" {
   type = list(object({
     name    = string
     version = string
   }))
+}
+
+variable "ami_id" {
+  description = "AMI ID for the launch template"
+  type        = string
 }
 
 variable "bastion-ami" {
