@@ -1,4 +1,4 @@
-# Configuring Production-Ready EKS Clusters with Terraform and GitHub Actions
+# Configuring Production-Ready EKS Clusters with Terraform
 
 ## Overview
 This project covers:
